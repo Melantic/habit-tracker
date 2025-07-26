@@ -51,7 +51,7 @@ def add():
 @app.route("/delete/<habit_id>", methods=["POST"])
 def delete(habit_id):
     habits = load_db()
-    new_habits = [h for h in habits if h["id"] != habit_id]
+    new_habits = [habit for habit in habits if habit["id"] != habit_id]
     if len(new_habits) == len(habits):
         #flash("Habit not found.")
         return redirect(url_for("index"))
@@ -69,9 +69,9 @@ def edit(habit_id):
     
     habits = load_db()
     found = False
-    for h in habits:
-        if h["id"] == habit_id:
-            h["name"] = new_name
+    for habit in habits:
+        if habit["id"] == habit_id:
+            habit["name"] = new_name
             found = True
             break
 
@@ -90,26 +90,26 @@ def mark_done(habit_id):
     today_str = today.isoformat()
     yesterday = today - timedelta(days=1)
     found = False
-    for h in habits:
-        if h["id"] == habit_id:
+    for habit in habits:
+        if habit["id"] == habit_id:
             found = True
 
-            if h["last_done"] == today_str:
+            if habit["last_done"] == today_str:
                 #flash("Already marked done today.")
                 break
 
             try:
-                last = date.fromisoformat(h["last_done"]) if h["last_done"] else None
+                last = date.fromisoformat(habit["last_done"]) if habit["last_done"] else None
             except ValueError:
                 last = None
 
             if last == yesterday:
-                h["streak"] += 1
+                habit["streak"] += 1
             else:
-                h["streak"] = 1
+                habit["streak"] = 1
 
-            h["last_done"] = today_str
-            h["best_streak"] = max(h["best_streak"], h["streak"])
+            habit["last_done"] = today_str
+            habit["best_streak"] = max(habit["best_streak"], habit["streak"])
 
             save_db(habits)
             #flash("Habit marked as done for today!")
