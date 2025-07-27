@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <title>Habit Tracker</title>
 </head>
 
@@ -15,36 +17,39 @@
     </form>
 
     <h2>Your Habits</h2>
-    {% if habits %}
-    <ul>
-        {% for habit in habits %}
-        {% set done_today = (habit['last_done'] == now_date) %}
-        <li>
-            <strong>{{ habit["name"] }}</strong>
-            (Streak: {{ habit["streak"] }} | Best: {{ habit["best_streak"] }})
+
+    <div class="card" style="width: 25rem;">
+        {% if habits %}
+        <ul class="list-group list-group-flush">
+            {% for habit in habits %}
             {% set done_today = (habit['last_done'] == now_date) %}
-            {% if done_today %}
-            <span style="color: green; margin-left:6px;">(Done today)</span>
-            {% else %}
-            <form action="{{ url_for('mark_done', habit_id=habit['id']) }}" method="post"
-                style="display:inline; margin-left:8px;">
-                <button type="submit">Mark Done</button>
-            </form>
-            {% endif %}
-            <form action="{{ url_for('edit', habit_id=habit['id']) }}" method="post"
-                style="display:inline; margin-left:8px;">
-                <input type="text" name="name" value="{{ habit['name'] }}" />
-                <button type="submit">Edit</button>
-            </form>
-            <form action="{{ url_for('delete', habit_id=habit['id']) }}" method="post" style="display:inline;">
-                <button type="submit">Delete</button>
-            </form>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>No habits yet. Add one above!</p>
-    {% endif %}
+            <li class="list-group-item">
+                <strong>{{ habit["name"] }}</strong>
+                (Streak: {{ habit["streak"] }} | Best: {{ habit["best_streak"] }})
+                {% set done_today = (habit['last_done'] == now_date) %}
+                {% if done_today %}
+                <span style="color: green; margin-left:6px;">(Done today)</span>
+                {% else %}
+                <form action="{{ url_for('mark_done', habit_id=habit['id']) }}" method="post"
+                    style="display:inline; margin-left:8px;">
+                    <button type="submit" class="btn btn-success">Mark Done</button>
+                </form>
+                {% endif %}
+                <form action="{{ url_for('edit', habit_id=habit['id']) }}" method="post"
+                    style="display:inline; margin-left:8px;">
+                    <input type="text" name="name" value="{{ habit['name'] }}" />
+                    <button type="submit" class="btn btn-warning">Edit</button>
+                </form>
+                <form action="{{ url_for('delete', habit_id=habit['id']) }}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No habits yet. Add one above!</p>
+        {% endif %}
+    </div>
 </body>
 
 </html>
