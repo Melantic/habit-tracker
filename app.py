@@ -42,7 +42,8 @@ def add():
         "name": name,
         "last_done": "",
         "streak": 0,
-        "best_streak": 0
+        "best_streak": 0,
+        "completed_dates": []
         })
     save_db(habits)
     #flash(f'Habit "{name}" added!')
@@ -94,10 +95,12 @@ def mark_done(habit_id):
         if habit["id"] == habit_id:
             found = True
 
+            habit["completed_dates"].append(today_str)
+
             if habit["last_done"] == today_str:
                 #flash("Already marked done today.")
                 break
-
+            
             try:
                 last = date.fromisoformat(habit["last_done"]) if habit["last_done"] else None
             except ValueError:
